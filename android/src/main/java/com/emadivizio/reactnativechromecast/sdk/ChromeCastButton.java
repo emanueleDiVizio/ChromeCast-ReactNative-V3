@@ -31,7 +31,7 @@ public class ChromeCastButton extends LinearLayout {
     private void init() {
         inflate(getContext(), R.layout.sample_chrome_cast_button, this);
         this.mButton = (MediaRouteButton) findViewById(R.id.media_route_button);
-        CastDeviceScanner.registerButton(getContext().getApplicationContext(), mButton);
+        CastManager.registerButton(getContext().getApplicationContext(), mButton);
     }
 
 

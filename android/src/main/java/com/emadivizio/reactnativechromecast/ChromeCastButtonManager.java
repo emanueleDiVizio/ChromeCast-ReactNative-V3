@@ -13,7 +13,6 @@ public class ChromeCastButtonManager extends SimpleViewManager<ChromeCastButton>
 
     public static final String REACT_CLASS = "RCTChromeCastButton";
 
-
     @Override
     public String getName() {
         return REACT_CLASS;

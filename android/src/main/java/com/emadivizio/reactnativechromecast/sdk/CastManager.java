@@ -1,12 +1,16 @@
 package com.emadivizio.reactnativechromecast.sdk;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.MediaRouteButton;
 import android.view.KeyEvent;
 import android.view.Menu;
 
 import com.emadivizio.reactnativechromecast.R;
+import com.emadivizio.reactnativechromecast.sdk.player.CastPlayer;
 
 
 /**
@@ -15,16 +19,16 @@ import com.emadivizio.reactnativechromecast.R;
 
 public class CastManager {
     private CastDeviceScanner castDeviceScanner;
+    private CastPlayer castPlayer;
 
-
-    public void onCreate(Context context){
+    private void onCreate(Context context){
         castDeviceScanner = new CastDeviceScanner();
         castDeviceScanner.setUp(context);
 
     }
 
 
-    public void onResume(Context context){
+    private void onResume(Context context){
         castDeviceScanner.startScanning(context, new CastDeviceScanner.CastScanListener() {
             @Override
             public void onNoDevicesAvailable() {
@@ -93,10 +97,49 @@ public class CastManager {
         });
     }
 
-    public void onPause(){
+    private void onPause(){
         castDeviceScanner.stopScanning();
     }
 
+
+    public void bindToActivityLifecycle(Application application){
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle bundle) {
+                onCreate(activity);
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                onResume(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                onPause();
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
+    }
 
 
     public boolean dispatchKeyEvent(@NonNull KeyEvent event){
@@ -108,6 +151,16 @@ public class CastManager {
         activity.getMenuInflater().inflate(R.menu.menu, menu);
         CastDeviceScanner.registerMenu(activity, menu,  R.id.media_route_menu_item);
         return true;
+    }
+
+
+    public static void registerButton(Context context, MediaRouteButton button){
+        CastDeviceScanner.registerButton(context, button);
+    }
+
+
+    public CastPlayer.Controls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive){
+        return castPlayer.loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER));
     }
 
 
