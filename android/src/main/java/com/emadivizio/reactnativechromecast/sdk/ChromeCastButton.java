@@ -15,23 +15,23 @@ public class ChromeCastButton extends LinearLayout {
 
     public ChromeCastButton(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public ChromeCastButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public ChromeCastButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        init(context);
     }
 
-    private void init() {
-        inflate(getContext(), R.layout.sample_chrome_cast_button, this);
+    private void init(Context context) {
+        inflate(context, R.layout.sample_chrome_cast_button, this);
         this.mButton = (MediaRouteButton) findViewById(R.id.media_route_button);
-        CastManager.registerButton(getContext().getApplicationContext(), mButton);
+        CastManager.registerButton(context, mButton);
     }
 
 

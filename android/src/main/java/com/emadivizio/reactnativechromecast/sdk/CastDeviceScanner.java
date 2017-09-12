@@ -15,6 +15,8 @@ import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 
+import static com.google.android.gms.cast.framework.CastContext.getSharedInstance;
+
 /**
  * Created by Emanuele on 07/09/2017.
  */
@@ -28,6 +30,8 @@ public class CastDeviceScanner {
     private CastStateListener mCastStateListener;
     private SessionManagerListener<CastSession> mSessionManagerListener;
 
+    private CastContext mCastContext;
+
     private Context context;
 
     public CastDeviceScanner(Context context) {
@@ -35,8 +39,29 @@ public class CastDeviceScanner {
     }
 
 
+    /**
+     * Set up cast context and register lifecycle callbacks.
+     *
+     */
+    private void setUpCastContext() {
+        getCastContext();
+    }
+
+    /**
+     * Set up cast manager to manage cast devices.
+     *
+     */
+    public void setUp() {
+        setUpCastContext();
+    }
+
+
+
     private CastContext getCastContext(){
-        return CastContext.getSharedInstance(context);
+        if(mCastContext == null){
+            mCastContext = CastContext.getSharedInstance(context);
+        }
+        return mCastContext;
     }
 
     /**
@@ -67,7 +92,7 @@ public class CastDeviceScanner {
      */
     private void getCurrentCastSession() {
         if (mCastSession == null) {
-            mCastSession = CastContext.getSharedInstance(context).getSessionManager()
+            mCastSession = getSharedInstance(context).getSessionManager()
                   .getCurrentCastSession();
         }
     }
