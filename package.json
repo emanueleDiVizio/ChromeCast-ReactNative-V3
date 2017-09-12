@@ -1,8 +1,8 @@
 {
-  "name": "react-native-chrome-cast",
+  "name": "react-native-chrome-cast-v3",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,10 +15,5 @@
     "react-native": "^0.41.2",
     "react-native-windows": "0.41.0-rc.1",
     "react": "16.0.0-alpha.12"
-  },
-  "dependencies": {
-    "react": "16.0.0-alpha.12",
-    "react-native": "^0.41.2",
-    "react-native-windows": "0.41.0-rc.1"
   }
 }
