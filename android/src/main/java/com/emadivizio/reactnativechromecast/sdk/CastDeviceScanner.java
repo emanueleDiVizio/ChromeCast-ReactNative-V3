@@ -22,21 +22,21 @@ import com.google.android.gms.cast.framework.SessionManagerListener;
 @SuppressWarnings("WeakerAccess")
 public class CastDeviceScanner {
 
-    private CastContext mCastContext;
     private CastSession mCastSession;
 
 
     private CastStateListener mCastStateListener;
     private SessionManagerListener<CastSession> mSessionManagerListener;
 
+    private Context context;
 
-    /**
-     * Set up cast context and register lifecycle callbacks.
-     *
-     * @param context Android context.
-     */
-    private void setUpCastContext(Context context) {
-        mCastContext = CastContext.getSharedInstance(context);
+    public CastDeviceScanner(Context context) {
+        this.context = context;
+    }
+
+
+    private CastContext getCastContext(){
+        return CastContext.getSharedInstance(context);
     }
 
     /**
@@ -64,12 +64,11 @@ public class CastDeviceScanner {
     /**
      * Get the current cast session.
      *
-     * @param context Android context.
      */
-    private void getCurrentCastSession(Context context) {
+    private void getCurrentCastSession() {
         if (mCastSession == null) {
             mCastSession = CastContext.getSharedInstance(context).getSessionManager()
-                    .getCurrentCastSession();
+                  .getCurrentCastSession();
         }
     }
 
@@ -79,9 +78,9 @@ public class CastDeviceScanner {
     private void addListeners(CastScanListener listener, SessionStateListener sessionStateListener) {
         mSessionManagerListener = setUpSessionManagerListener(sessionStateListener);
         mCastStateListener = setUpCastStateListener(listener);
-        mCastContext.addCastStateListener(mCastStateListener);
-        mCastContext.getSessionManager().addSessionManagerListener(
-                mSessionManagerListener, CastSession.class);
+        getCastContext().addCastStateListener(mCastStateListener);
+        getCastContext().getSessionManager().addSessionManagerListener(
+              mSessionManagerListener, CastSession.class);
     }
 
 
@@ -89,19 +88,9 @@ public class CastDeviceScanner {
      * Remove listeners from cast context.
      */
     private void removeListeners() {
-        mCastContext.removeCastStateListener(mCastStateListener);
-        mCastContext.getSessionManager().removeSessionManagerListener(
-                mSessionManagerListener, CastSession.class);
-    }
-
-
-    /**
-     * Set up cast manager to manage cast devices.
-     *
-     * @param context   Android context.
-     */
-    public void setUp(Context context) {
-        setUpCastContext(context);
+        getCastContext().removeCastStateListener(mCastStateListener);
+        getCastContext().getSessionManager().removeSessionManagerListener(
+              mSessionManagerListener, CastSession.class);
     }
 
 
@@ -124,7 +113,7 @@ public class CastDeviceScanner {
      * @param mediaRouteButton mediaRouteButton id.
      * @return MenuItem.
      */
-    public static MenuItem registerMenu(Context context, Menu menu, int mediaRouteButton) {
+    public static MenuItem registerMenu( Context context, Menu menu, int mediaRouteButton) {
         return setUpCastButton(context, menu, mediaRouteButton);
     }
 
@@ -139,11 +128,10 @@ public class CastDeviceScanner {
     /**
      * Resume Cast Manager.
      *
-     * @param context Android Context.
      */
-    public void startScanning(Context context, CastScanListener castScanListener, SessionStateListener sessionStateListener) {
+    public void startScanning(CastScanListener castScanListener, SessionStateListener sessionStateListener) {
         addListeners(castScanListener, sessionStateListener);
-        getCurrentCastSession(context);
+        getCurrentCastSession();
     }
 
 
@@ -154,7 +142,7 @@ public class CastDeviceScanner {
      * @return Operation successful.
      */
     public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
-        return mCastContext.onDispatchVolumeKeyEventBeforeJellyBean(event);
+        return getCastContext().onDispatchVolumeKeyEventBeforeJellyBean(event);
     }
 
 

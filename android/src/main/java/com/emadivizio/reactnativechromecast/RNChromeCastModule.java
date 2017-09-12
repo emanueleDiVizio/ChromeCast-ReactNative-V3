@@ -17,7 +17,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   public RNChromeCastModule(ReactApplicationContext reactContext, FragmentActivity activity) {
     super(reactContext);
-    this.manager = new CastManager();
+    this.manager = new CastManager(reactContext);
     this.manager.bindToActivityLifecycle(activity.getApplication());
   }
 

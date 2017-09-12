@@ -21,80 +21,78 @@ public class CastManager {
     private CastDeviceScanner castDeviceScanner;
     private CastPlayer castPlayer;
 
-    private void onCreate(Context context){
-        castDeviceScanner = new CastDeviceScanner();
-        castDeviceScanner.setUp(context);
-
+    public CastManager(Context context) {
+        castDeviceScanner = new CastDeviceScanner(context);
     }
 
 
-    private void onResume(Context context){
-        castDeviceScanner.startScanning(context, new CastDeviceScanner.CastScanListener() {
-            @Override
-            public void onNoDevicesAvailable() {
-            }
+    private void onResume(){
+        castDeviceScanner.startScanning(new CastDeviceScanner.CastScanListener() {
+                                            @Override
+                                            public void onNoDevicesAvailable() {
+                                            }
 
-            @Override
-            public void onDeviceConnecting() {
+                                            @Override
+                                            public void onDeviceConnecting() {
 //                showIntroductoryOverlay(activity);
-            }
+                                            }
 
-            @Override
-            public void onDeviceConnected() {
+                                            @Override
+                                            public void onDeviceConnected() {
 //                showIntroductoryOverlay(activity);
-            }
+                                            }
 
-            @Override
-            public void onDeviceNotConnected() {
+                                            @Override
+                                            public void onDeviceNotConnected() {
 //                showIntroductoryOverlay(activity);
-            }
-        },
-                new CastDeviceScanner.SessionStateListener() {
-            @Override
-            public void onSessionStarting() {
+                                            }
+                                        },
+              new CastDeviceScanner.SessionStateListener() {
+                  @Override
+                  public void onSessionStarting() {
 
-            }
+                  }
 
-            @Override
-            public void onSessionStarted(String var2) {
+                  @Override
+                  public void onSessionStarted(String var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionStartFailed(int var2) {
+                  @Override
+                  public void onSessionStartFailed(int var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionEnding() {
+                  @Override
+                  public void onSessionEnding() {
 
-            }
+                  }
 
-            @Override
-            public void onSessionEnded(int var2) {
+                  @Override
+                  public void onSessionEnded(int var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionResuming(String var2) {
+                  @Override
+                  public void onSessionResuming(String var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionResumed(boolean var2) {
+                  @Override
+                  public void onSessionResumed(boolean var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionResumeFailed(int var2) {
+                  @Override
+                  public void onSessionResumeFailed(int var2) {
 
-            }
+                  }
 
-            @Override
-            public void onSessionSuspended(int var2) {
+                  @Override
+                  public void onSessionSuspended(int var2) {
 
-            }
-        });
+                  }
+              });
     }
 
     private void onPause(){
@@ -106,7 +104,7 @@ public class CastManager {
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
-                onCreate(activity);
+
             }
 
             @Override
@@ -116,7 +114,7 @@ public class CastManager {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                onResume(activity);
+                onResume();
             }
 
             @Override
