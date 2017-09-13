@@ -19,12 +19,13 @@ import com.emadivizio.reactnativechromecast.sdk.player.CastPlayer;
 
 public class CastManager {
     private CastDeviceScanner castDeviceScanner;
-    private CastPlayer castPlayer;
+    private Context context;
     private CastDeviceScanner.SessionStateListener sessionStateListener;
     private CastDeviceScanner.CastScanListener castScanListener;
 
     public CastManager(Context context, CastDeviceScanner.SessionStateListener listener, CastDeviceScanner.CastScanListener castScanListener) {
         castDeviceScanner = new CastDeviceScanner(context);
+        this.context = context;
         this.sessionStateListener = listener;
         this.castScanListener = castScanListener;
     }
@@ -106,7 +107,7 @@ public class CastManager {
 
 
     public CastPlayer.Controls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive){
-        return castPlayer.loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER));
+        return new CastPlayer(castDeviceScanner.getCurrentCastSession()).loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER));
     }
 
 }

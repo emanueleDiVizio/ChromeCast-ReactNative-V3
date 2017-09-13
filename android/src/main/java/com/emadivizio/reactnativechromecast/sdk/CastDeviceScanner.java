@@ -90,11 +90,12 @@ public class CastDeviceScanner {
      * Get the current cast session.
      *
      */
-    private void getCurrentCastSession() {
+    public CastSession getCurrentCastSession() {
         if (mCastSession == null) {
             mCastSession = getSharedInstance(context).getSessionManager()
                   .getCurrentCastSession();
         }
+        return mCastSession;
     }
 
     /**

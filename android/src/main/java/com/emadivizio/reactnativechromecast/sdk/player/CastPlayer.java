@@ -1,12 +1,16 @@
 package com.emadivizio.reactnativechromecast.sdk.player;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.emadivizio.reactnativechromecast.sdk.Video;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.WebImage;
 
 /**
@@ -17,7 +21,10 @@ public class CastPlayer {
 
 
   private CastSession mCastSession;
-  private RemoteMediaClient remoteMediaClient;
+
+  public CastPlayer(CastSession mCastSession) {
+    this.mCastSession = mCastSession;
+  }
 
 
   private MediaMetadata buildMetadata(Video video){
@@ -44,7 +51,7 @@ public class CastPlayer {
   private MediaInfo buildMediaInfo(Video video){
     return new MediaInfo.Builder(video.getUrl())
           .setStreamType(getStreamType(video))
-          .setContentType("videos/mp4")
+          .setContentType("application/x-mpegurl")
           .setMetadata(buildMetadata(video))
           .setStreamDuration(video.getDuration())
           .build();
@@ -67,29 +74,92 @@ public class CastPlayer {
     }
 
 
-    public void load(boolean autoplay, long position){
-      remoteMediaClient.load(mediaInfo, autoplay, position);
+    public void load(boolean autoplay, long position, final ControlsCallback controlsCallback){
+      remoteMediaClient.load(mediaInfo, autoplay, position).setResultCallback(new ResultCallbacks<RemoteMediaClient.MediaChannelResult>() {
+        @Override
+        public void onSuccess(@NonNull RemoteMediaClient.MediaChannelResult mediaChannelResult) {
+          controlsCallback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(@NonNull Status status) {
+          Log.d("FAILURE", String.valueOf(status.getStatusCode()));
+          Log.d("FAILURE", String.valueOf(status.getStatusMessage()));
+          controlsCallback.onFailure(status.getStatusMessage());
+        }
+      });
     }
 
 
-    public void play(){
-      remoteMediaClient.play();
+    public void play(final ControlsCallback controlsCallback){
+      remoteMediaClient.play().setResultCallback(new ResultCallbacks<RemoteMediaClient.MediaChannelResult>() {
+        @Override
+        public void onSuccess(@NonNull RemoteMediaClient.MediaChannelResult mediaChannelResult) {
+          controlsCallback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(@NonNull Status status) {
+          Log.d("FAILURE", String.valueOf(status.getStatusCode()));
+          Log.d("FAILURE", String.valueOf(status.getStatusMessage()));
+          controlsCallback.onFailure(status.getStatusMessage());
+        }
+      });
     }
 
 
-    public void pause(){
-      remoteMediaClient.pause();
+    public void pause(final ControlsCallback controlsCallback){
+      remoteMediaClient.pause().setResultCallback(new ResultCallbacks<RemoteMediaClient.MediaChannelResult>() {
+        @Override
+        public void onSuccess(@NonNull RemoteMediaClient.MediaChannelResult mediaChannelResult) {
+          controlsCallback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(@NonNull Status status) {
+          controlsCallback.onFailure(status.getStatusMessage());
+        }
+      });
     }
 
 
-    public void stop(){
-      remoteMediaClient.stop();
+    public void stop(final ControlsCallback controlsCallback){
+      remoteMediaClient.stop().setResultCallback(new ResultCallbacks<RemoteMediaClient.MediaChannelResult>() {
+        @Override
+        public void onSuccess(@NonNull RemoteMediaClient.MediaChannelResult mediaChannelResult) {
+          controlsCallback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(@NonNull Status status) {
+          controlsCallback.onFailure(status.getStatusMessage());
+        }
+      });
     }
 
 
-    public void seek(long position){
-      remoteMediaClient.seek(position);
+    public void seek(long position, final ControlsCallback controlsCallback){
+      remoteMediaClient.seek(position).setResultCallback(new ResultCallbacks<RemoteMediaClient.MediaChannelResult>() {
+        @Override
+        public void onSuccess(@NonNull RemoteMediaClient.MediaChannelResult mediaChannelResult) {
+          controlsCallback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(@NonNull Status status) {
+          controlsCallback.onFailure(status.getStatusMessage());
+        }
+      });
     }
+
+
+
+  }
+
+  public interface ControlsCallback{
+    void onSuccess();
+
+    void onFailure(String message);
   }
 
 }

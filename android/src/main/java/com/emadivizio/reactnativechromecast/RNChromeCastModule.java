@@ -16,6 +16,7 @@ import java.util.Map;
 public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   private CastManager manager;
+  private FragmentActivity activity;
   private ReactApplicationContext reactContext;
   private CastPlayer.Controls controls;
 
@@ -39,11 +40,13 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   public RNChromeCastModule(ReactApplicationContext reactContext, FragmentActivity activity) {
     super(reactContext);
     this.manager = new CastManager(reactContext, new ReactCastSessionStateListener(reactContext), new ReactCastScanListener(reactContext));
+    this.activity = activity;
     manager.bindToActivityLifecycle(activity.getApplication());
     this.reactContext = reactContext;
   }
 
-  @Override public Map<String, Object> getConstants() {
+  @Override
+  public Map<String, Object> getConstants() {
     final Map<String, Object> constants = new HashMap<>();
     constants.put("SESSION_STARTING", SESSION_STARTING);
     constants.put("SESSION_STARTED", SESSION_STARTED);
@@ -68,44 +71,123 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive, Callback errorCallback, Callback successCallback) {
-    try{
-      controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive);
-      successCallback.invoke(true);
-    } catch (Exception e){
-      errorCallback.invoke(e.getMessage());
-    }
+  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive);
+          successCallback.invoke(true);
+        } catch (Exception e) {
+          errorCallback.invoke(e.getMessage());
+        }
+      }
+    });
+
   }
 
   @ReactMethod
-  public void start(){
-    controls.load(true, 0);
+  public void start(final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        controls.load(true, 0, new CastPlayer.ControlsCallback() {
+          @Override
+          public void onSuccess() {
+            successCallback.invoke(true);
+          }
+
+          @Override
+          public void onFailure(String message) {
+            errorCallback.invoke(message);
+          }
+        });
+      }
+    });
   }
 
 
   @ReactMethod
-  public void play(){
-    controls.play();
+  public void play(final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        controls.play(new CastPlayer.ControlsCallback() {
+          @Override
+          public void onSuccess() {
+            successCallback.invoke(true);
+          }
+
+          @Override
+          public void onFailure(String message) {
+            errorCallback.invoke(message);
+          }
+        });
+      }
+    });
   }
 
 
   @ReactMethod
-  public void pause(){
-    controls.pause();
+  public void pause(final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        controls.pause(new CastPlayer.ControlsCallback() {
+          @Override
+          public void onSuccess() {
+            successCallback.invoke(true);
+          }
+
+          @Override
+          public void onFailure(String message) {
+            errorCallback.invoke(message);
+          }
+        });
+      }
+    });
   }
 
 
   @ReactMethod
-  public void stop(){
-    controls.stop();
+  public void stop(final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        controls.stop(new CastPlayer.ControlsCallback() {
+          @Override
+          public void onSuccess() {
+            successCallback.invoke(true);
+          }
+
+          @Override
+          public void onFailure(String message) {
+            errorCallback.invoke(message);
+          }
+        });
+      }
+    });
   }
 
   @ReactMethod
-  public void seek(double position){
-    controls.seek((long) position);
+  public void seek(final double position, final Callback errorCallback, final Callback successCallback) {
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        controls.seek((long) position, new CastPlayer.ControlsCallback() {
+          @Override
+          public void onSuccess() {
+            successCallback.invoke(true);
+          }
+
+          @Override
+          public void onFailure(String message) {
+            errorCallback.invoke(message);
+          }
+        });
+      }
+    });
   }
-
-
 
 
 }
