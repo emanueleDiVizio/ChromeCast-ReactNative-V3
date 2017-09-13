@@ -74,7 +74,7 @@ function ChromeCastPlayer(available) {
 function CS() {
     this.loadVideo = (video, cb) => {
         NativeChromeCast.loadVideo(video.url, video.title, video.subtitle,
-            video.image, video.duration, video.autoplay, video.mimeType,
+            video.image, video.duration, video.isLive, video.mimeType,
             (msg) => errorCallback(cb, msg),
             () => {
                 if (video.autoplay) {
