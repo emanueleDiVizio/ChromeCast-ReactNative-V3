@@ -7,14 +7,16 @@ public class Video {
   private String url, title, subtitle, imageUri;
   private int duration;
   private StreamType type;
+  private String mimeType;
 
-  public Video(String url, String title, String subtitle, String imageUri, int duration, StreamType type) {
+  public Video(String url, String title, String subtitle, String imageUri, int duration, StreamType type, String mimeType) {
     this.url = url;
     this.title = title;
     this.subtitle = subtitle;
     this.imageUri = imageUri;
     this.duration = duration;
     this.type = type;
+    this.mimeType = mimeType;
   }
 
 
@@ -40,6 +42,10 @@ public class Video {
 
   public StreamType getType() {
     return type;
+  }
+
+  public String getMimeType() {
+    return mimeType;
   }
 
   public enum StreamType {

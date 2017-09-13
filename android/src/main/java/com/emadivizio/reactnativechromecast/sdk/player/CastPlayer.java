@@ -2,7 +2,6 @@ package com.emadivizio.reactnativechromecast.sdk.player;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.emadivizio.reactnativechromecast.sdk.Video;
 import com.google.android.gms.cast.MediaInfo;
@@ -51,7 +50,7 @@ public class CastPlayer {
   private MediaInfo buildMediaInfo(Video video){
     return new MediaInfo.Builder(video.getUrl())
           .setStreamType(getStreamType(video))
-          .setContentType("application/x-mpegurl")
+          .setContentType(video.getMimeType())
           .setMetadata(buildMetadata(video))
           .setStreamDuration(video.getDuration())
           .build();
@@ -83,8 +82,6 @@ public class CastPlayer {
 
         @Override
         public void onFailure(@NonNull Status status) {
-          Log.d("FAILURE", String.valueOf(status.getStatusCode()));
-          Log.d("FAILURE", String.valueOf(status.getStatusMessage()));
           controlsCallback.onFailure(status.getStatusMessage());
         }
       });
@@ -100,8 +97,6 @@ public class CastPlayer {
 
         @Override
         public void onFailure(@NonNull Status status) {
-          Log.d("FAILURE", String.valueOf(status.getStatusCode()));
-          Log.d("FAILURE", String.valueOf(status.getStatusMessage()));
           controlsCallback.onFailure(status.getStatusMessage());
         }
       });

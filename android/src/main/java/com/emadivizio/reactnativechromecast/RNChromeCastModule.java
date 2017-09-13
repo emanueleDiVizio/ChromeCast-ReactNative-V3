@@ -15,27 +15,12 @@ import java.util.Map;
 
 public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
+
   private CastManager manager;
   private FragmentActivity activity;
   private ReactApplicationContext reactContext;
   private CastPlayer.Controls controls;
 
-
-  public static final int SESSION_STARTING = 0;
-  public static final int SESSION_STARTED = 1;
-  public static final int SESSION_START_FAILED = 2;
-  public static final int SESSION_ENDING = 3;
-  public static final int SESSION_ENDED = 4;
-  public static final int SESSION_RESUMING = 5;
-  public static final int SESSION_RESUMED = 6;
-  public static final int SESSION_RESUME_FAILED = 7;
-  public static final int SESSION_SUSPENDED = 8;
-
-
-  public static final String SESSION_STATUS_STRING = "SESSION_STATUS";
-  public static final String DEVICES_AVAILABLE_STRING = "DEVICES_AVAILABLE";
-  public static final String DEVICE_CONNECTED_STRING = "DEVICE_CONNECTED";
-  public static final String DEVICE_CONNECTING_STRING = "DEVICE_CONNECTING";
 
   public RNChromeCastModule(ReactApplicationContext reactContext, FragmentActivity activity) {
     super(reactContext);
@@ -48,19 +33,19 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   @Override
   public Map<String, Object> getConstants() {
     final Map<String, Object> constants = new HashMap<>();
-    constants.put("SESSION_STARTING", SESSION_STARTING);
-    constants.put("SESSION_STARTED", SESSION_STARTED);
-    constants.put("SESSION_START_FAILED", SESSION_START_FAILED);
-    constants.put("SESSION_ENDING", SESSION_ENDING);
-    constants.put("SESSION_ENDED", SESSION_ENDED);
-    constants.put("SESSION_RESUMING", SESSION_RESUMING);
-    constants.put("SESSION_RESUMED", SESSION_RESUMED);
-    constants.put("SESSION_RESUME_FAILED", SESSION_RESUME_FAILED);
-    constants.put("SESSION_SUSPENDED", SESSION_SUSPENDED);
-    constants.put(SESSION_STATUS_STRING, SESSION_STATUS_STRING);
-    constants.put(DEVICES_AVAILABLE_STRING, DEVICES_AVAILABLE_STRING);
-    constants.put(DEVICE_CONNECTED_STRING, DEVICE_CONNECTED_STRING);
-    constants.put(DEVICE_CONNECTING_STRING, DEVICE_CONNECTING_STRING);
+    constants.put(Constants.SESSION_STARTING_STRING, Constants.SESSION_STARTING);
+    constants.put(Constants.SESSION_STARTED_STRING, Constants.SESSION_STARTED);
+    constants.put(Constants.SESSION_START_FAILED_STRING, Constants.SESSION_START_FAILED);
+    constants.put(Constants.SESSION_ENDING_STRING, Constants.SESSION_ENDING);
+    constants.put(Constants.SESSION_ENDED_STRING, Constants.SESSION_ENDED);
+    constants.put(Constants.SESSION_RESUMING_STRING, Constants.SESSION_RESUMING);
+    constants.put(Constants.SESSION_RESUMED_STRING, Constants.SESSION_RESUMED);
+    constants.put(Constants.SESSION_RESUME_FAILED_STRING, Constants.SESSION_RESUME_FAILED);
+    constants.put(Constants.SESSION_SUSPENDED_STRING, Constants.SESSION_SUSPENDED);
+    constants.put(Constants.SESSION_STATUS_STRING, Constants.SESSION_STATUS_STRING);
+    constants.put(Constants.DEVICES_AVAILABLE_STRING, Constants.DEVICES_AVAILABLE_STRING);
+    constants.put(Constants.DEVICE_CONNECTED_STRING, Constants.DEVICE_CONNECTED_STRING);
+    constants.put(Constants.DEVICE_CONNECTING_STRING, Constants.DEVICE_CONNECTING_STRING);
     return constants;
   }
 
@@ -71,13 +56,13 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final Callback errorCallback, final Callback successCallback) {
+  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Callback errorCallback, final Callback successCallback) {
     activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
         try {
-          controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive);
-          successCallback.invoke(true);
+          controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive, mimeType);
+          successCallback.invoke();
         } catch (Exception e) {
           errorCallback.invoke(e.getMessage());
         }
@@ -94,7 +79,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.load(true, 0, new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke(true);
+            successCallback.invoke();
           }
 
           @Override
@@ -115,7 +100,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.play(new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke(true);
+            successCallback.invoke();
           }
 
           @Override
@@ -136,7 +121,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.pause(new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke(true);
+            successCallback.invoke();
           }
 
           @Override
@@ -157,7 +142,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.stop(new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke(true);
+            successCallback.invoke();
           }
 
           @Override
@@ -177,7 +162,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.seek((long) position, new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
-            successCallback.invoke(true);
+            successCallback.invoke();
           }
 
           @Override

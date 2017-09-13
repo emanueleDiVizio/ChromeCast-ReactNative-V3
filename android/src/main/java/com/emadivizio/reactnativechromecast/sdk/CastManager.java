@@ -106,8 +106,8 @@ public class CastManager {
     }
 
 
-    public CastPlayer.Controls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive){
-        return new CastPlayer(castDeviceScanner.getCurrentCastSession()).loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER));
+    public CastPlayer.Controls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive, String mimeType){
+        return new CastPlayer(castDeviceScanner.getCurrentCastSession()).loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER, mimeType));
     }
 
 }

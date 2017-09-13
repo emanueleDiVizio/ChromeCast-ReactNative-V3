@@ -22,53 +22,54 @@ class ReactCastSessionStateListener implements CastDeviceScanner.SessionStateLis
   private void sendEvent(int status) {
     Log.d("EVENT", String.valueOf(status));
     WritableMap map = Arguments.createMap();
-    map.putInt(RNChromeCastModule.SESSION_STATUS_STRING, status);
+    map.putInt(Constants.SESSION_STATUS_STRING, status);
+    map.putString(Constants.SESSION_STATUS_MESSAGE_STRING, Constants.intToString(status));
     mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
           .emit("ChromeCastSessionEvent", map);
   }
 
   @Override
   public void onSessionStarting() {
-    sendEvent(RNChromeCastModule.SESSION_STARTING);
+    sendEvent(Constants.SESSION_STARTING);
   }
 
   @Override
   public void onSessionStarted(String var2) {
-    sendEvent(RNChromeCastModule.SESSION_STARTED);
+    sendEvent(Constants.SESSION_STARTED);
   }
 
   @Override
   public void onSessionStartFailed(int var2) {
-    sendEvent(RNChromeCastModule.SESSION_START_FAILED);
+    sendEvent(Constants.SESSION_START_FAILED);
   }
 
   @Override
   public void onSessionEnding() {
-    sendEvent(RNChromeCastModule.SESSION_ENDING);
+    sendEvent(Constants.SESSION_ENDING);
   }
 
   @Override
   public void onSessionEnded(int var2) {
-    sendEvent(RNChromeCastModule.SESSION_ENDED);
+    sendEvent(Constants.SESSION_ENDED);
   }
 
   @Override
   public void onSessionResuming(String var2) {
-    sendEvent(RNChromeCastModule.SESSION_RESUMING);
+    sendEvent(Constants.SESSION_RESUMING);
   }
 
   @Override
   public void onSessionResumed(boolean var2) {
-    sendEvent(RNChromeCastModule.SESSION_RESUMED);
+    sendEvent(Constants.SESSION_RESUMED);
   }
 
   @Override
   public void onSessionResumeFailed(int var2) {
-    sendEvent(RNChromeCastModule.SESSION_RESUME_FAILED);
+    sendEvent(Constants.SESSION_RESUME_FAILED);
   }
 
   @Override
   public void onSessionSuspended(int var2) {
-    sendEvent(RNChromeCastModule.SESSION_SUSPENDED);
+    sendEvent(Constants.SESSION_SUSPENDED);
   }
 }
