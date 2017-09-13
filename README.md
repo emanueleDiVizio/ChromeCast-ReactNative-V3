@@ -50,4 +50,19 @@ import RNChromeCast from 'react-native-chrome-cast';
 // TODO: What to do with the module?
 RNChromeCast;
 ```
+
+
+
+## Constants
+```
+SESSION_STARTING = 0;
+SESSION_STARTED = 1;
+SESSION_START_FAILED = 2;
+SESSION_ENDING = 3;
+SESSION_ENDED = 4;
+SESSION_RESUMING = 5;
+SESSION_RESUMED = 6;
+SESSION_RESUME_FAILED = 7;
+SESSION_SUSPENDED = 8;
+```
   
