@@ -1,7 +1,8 @@
 
 package com.emadivizio.reactnativechromecast;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Application;
+import android.os.Handler;
 
 import com.emadivizio.reactnativechromecast.sdk.CastManager;
 import com.emadivizio.reactnativechromecast.sdk.player.CastPlayer;
@@ -17,16 +18,14 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
 
   private CastManager manager;
-  private FragmentActivity activity;
   private ReactApplicationContext reactContext;
   private CastPlayer.Controls controls;
 
 
-  public RNChromeCastModule(ReactApplicationContext reactContext, FragmentActivity activity) {
+  public RNChromeCastModule(ReactApplicationContext reactContext, Application application) {
     super(reactContext);
     this.manager = new CastManager(reactContext, new ReactCastSessionStateListener(reactContext), new ReactCastScanListener(reactContext));
-    this.activity = activity;
-    manager.bindToActivityLifecycle(activity.getApplication());
+    manager.bindToActivityLifecycle(application);
     this.reactContext = reactContext;
   }
 
@@ -54,10 +53,15 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
     return "RNChromeCast";
   }
 
+  private void runOnUiThread(Runnable runnable){
+    Handler mainHandler = new Handler(reactContext.getMainLooper());
+    mainHandler.post(runnable);
+  }
+
 
   @ReactMethod
   public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         try {
@@ -73,7 +77,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void start(final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         controls.load(true, 0, new CastPlayer.ControlsCallback() {
@@ -94,7 +98,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void play(final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         controls.play(new CastPlayer.ControlsCallback() {
@@ -115,7 +119,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void pause(final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         controls.pause(new CastPlayer.ControlsCallback() {
@@ -136,7 +140,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void stop(final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         controls.stop(new CastPlayer.ControlsCallback() {
@@ -156,7 +160,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void seek(final double position, final Callback errorCallback, final Callback successCallback) {
-    activity.runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         controls.seek((long) position, new CastPlayer.ControlsCallback() {
