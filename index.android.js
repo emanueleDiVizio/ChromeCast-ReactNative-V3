@@ -7,23 +7,10 @@ export default RNChromeCast;*/
 
 
 import React, {Component, PropTypes} from 'react';
-import {requireNativeComponent, ViewPropTypes, findNodeHandle, NativeModules, DeviceEventEmitter} from 'react-native';
+import {requireNativeComponent, ViewPropTypes, findNodeHandle, NativeModules, DeviceEventEmitter, Text, View, Dimensions} from 'react-native';
 
 let NativeChromeCast = NativeModules.RNChromeCast;
 
-
-export class ChromeCastButton extends Component {
-
-    render() {
-        return <NativeChromeCastButton {...this.props} />;
-    }
-}
-
-ChromeCastButton.propTypes = {
-    progress: PropTypes.number,
-    indeterminate: PropTypes.bool,
-    ...ViewPropTypes
-}
 
 
 function ChromeCastPlayer(available) {
@@ -89,7 +76,7 @@ function CS() {
     };
 
     this.showChromeCastActivity = (cb) => {
-      NativeChromeCast.showChromeCastActivity()
+        NativeChromeCast.showChromeCastActivity()
     }
 
     this.listenForSessionEvents = (cb) => {
@@ -120,3 +107,37 @@ function CS() {
 export let ChromeCast = new CS()
 
 let NativeChromeCastButton = requireNativeComponent('RCTChromeCastButton', ChromeCastButton);
+
+export class ChromeCastButton extends Component {
+
+    render() {
+        return <NativeChromeCastButton {...this.props} />;
+    }
+}
+
+ChromeCastButton.propTypes = {
+    progress: PropTypes.number,
+    indeterminate: PropTypes.bool,
+    ...ViewPropTypes
+}
+
+
+
+
+
+let NativeChromeCastMiniController = requireNativeComponent('RCTChromeCastMiniController', ChromeCastMiniController);
+
+export class ChromeCastMiniController extends Component {
+
+    render() {
+        return <View>
+            <NativeChromeCastMiniController {...this.props} />
+        </View>;
+    }
+}
+
+ChromeCastMiniController.propTypes = {
+    progress: PropTypes.number,
+    indeterminate: PropTypes.bool,
+    ...ViewPropTypes
+}
