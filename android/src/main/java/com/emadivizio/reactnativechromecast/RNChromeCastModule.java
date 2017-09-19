@@ -2,9 +2,11 @@
 package com.emadivizio.reactnativechromecast;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Handler;
 
 import com.emadivizio.reactnativechromecast.sdk.CastManager;
+import com.emadivizio.reactnativechromecast.sdk.ExpandedControlsActivity;
 import com.emadivizio.reactnativechromecast.sdk.player.CastPlayer;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -58,6 +60,12 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
     mainHandler.post(runnable);
   }
 
+  @ReactMethod
+  public void showChromeCastActivity(){
+    Intent intent = new Intent(reactContext, ExpandedControlsActivity.class);
+    reactContext.startActivity(intent);
+  }
+
 
   @ReactMethod
   public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Callback errorCallback, final Callback successCallback) {
@@ -104,6 +112,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
         controls.play(new CastPlayer.ControlsCallback() {
           @Override
           public void onSuccess() {
+
             successCallback.invoke();
           }
 
@@ -177,6 +186,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
       }
     });
   }
+
 
 
 }

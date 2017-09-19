@@ -88,6 +88,10 @@ function CS() {
             })
     };
 
+    this.showChromeCastActivity = (cb) => {
+      NativeChromeCast.showChromeCastActivity()
+    }
+
     this.listenForSessionEvents = (cb) => {
         DeviceEventEmitter.addListener("ChromeCastSessionEvent", (e) => {
             cb({status: e.SESSION_STATUS, message: e.SESSION_STATUS_MESSAGE})
