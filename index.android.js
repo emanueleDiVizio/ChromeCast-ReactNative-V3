@@ -7,10 +7,18 @@ export default RNChromeCast;*/
 
 
 import React, {Component, PropTypes} from 'react';
-import {requireNativeComponent, ViewPropTypes, findNodeHandle, NativeModules, DeviceEventEmitter, Text, View, Dimensions} from 'react-native';
+import {
+    requireNativeComponent,
+    ViewPropTypes,
+    findNodeHandle,
+    NativeModules,
+    DeviceEventEmitter,
+    Text,
+    View,
+    Dimensions
+} from 'react-native';
 
 let NativeChromeCast = NativeModules.RNChromeCast;
-
 
 
 function ChromeCastPlayer(available) {
@@ -54,11 +62,9 @@ function ChromeCastPlayer(available) {
     }
 
 
-
-
 }
 
-function CS() {
+function ChromeCastWrapper() {
     this.loadVideo = (video, cb) => {
         NativeChromeCast.loadVideo(video.url, video.title, video.subtitle,
             video.image, video.duration, video.isLive, video.mimeType,
@@ -79,21 +85,6 @@ function CS() {
         NativeChromeCast.showChromeCastActivity()
     }
 
-    this.listenForSessionEvents = (cb) => {
-        DeviceEventEmitter.addListener("ChromeCastSessionEvent", (e) => {
-            cb({status: e.SESSION_STATUS, message: e.SESSION_STATUS_MESSAGE})
-        })
-    }
-
-    this.listenForScanEvent = (cb) => {
-        DeviceEventEmitter.addListener("ChromeCastScanEvent", (e) => {
-            cb({
-                deviceConnected: e.DEVICE_CONNECTED,
-                deviceConnecting: e.DEVICE_CONNECTING,
-                devicesAvailable: e.DEVICES_AVAILABLE})
-        })
-    }
-
 
     let successCallback = function (cb) {
         cb({isSuccess: true, error: '', player: new ChromeCastPlayer(true)})
@@ -104,25 +95,91 @@ function CS() {
     }
 }
 
-export let ChromeCast = new CS()
+export let ChromeCast = new ChromeCastWrapper()
+
+
+function ChromeCastScanner() {
+    let listenForSessionEvents = (cb) => {
+        DeviceEventEmitter.addListener("ChromeCastSessionEvent", (e) => {
+            cb({status: e.SESSION_STATUS, message: e.SESSION_STATUS_MESSAGE})
+        })
+    }
+
+    let listenForScanEvent = (cb) => {
+        DeviceEventEmitter.addListener("ChromeCastScanEvent", (e) => {
+            cb({
+                deviceConnected: e.DEVICE_CONNECTED,
+                deviceConnecting: e.DEVICE_CONNECTING,
+                devicesAvailable: e.DEVICES_AVAILABLE
+            })
+        })
+    }
+
+    this.setUp = () => {
+        NativeChromeCast.setUpScanner();
+    }
+
+    this.startScan = (scanCb, sessionCb) => {
+        NativeChromeCast.startScan();
+        this.scanListener = listenForScanEvent(scanCb);
+        this.sessionListener = listenForSessionEvents(sessionCb)
+    }
+
+    this.stopScan = () => {
+        NativeChromeCast.stopScan();
+        this.scanListener.remove();
+        this.sessionListener.remove()
+    }
+}
 
 let NativeChromeCastButton = requireNativeComponent('RCTChromeCastButton', ChromeCastButton);
 
 export class ChromeCastButton extends Component {
 
+    constructor(props) {
+        super(props);
+        this.scanner = new ChromeCastScanner();
+        this.scanner.setUp()
+    }
+
     render() {
         return <NativeChromeCastButton {...this.props} />;
+    }
+
+    componentWillMount() {
+        let {onScanEventReceived, onSessionEventReceived} = this.props;
+        this.scanner.startScan(onScanEventReceived, onSessionEventReceived);
+    }
+
+    componentWillUnmount() {
+        this.scanner.stopScan();
     }
 }
 
 ChromeCastButton.propTypes = {
-    progress: PropTypes.number,
-    indeterminate: PropTypes.bool,
+    onScanEventReceived: PropTypes.func.isRequired,
+    onSessionEventReceived: PropTypes.func.isRequired,
     ...ViewPropTypes
 }
 
+ChromeCastButton.defaultProps = {
+    onScanEventReceived: () => {
+    },
+    onSessionEventReceived: () => {
+    },
+}
 
-
+export let SessionStatus = Object.freeze({
+    STARTING: 0,
+    STARTED: 1,
+    START_FAILED: 2,
+    ENDING: 3,
+    ENDED: 4,
+    RESUMING: 5,
+    RESUMED: 6,
+    RESUME_FAILED: 7,
+    SUSPENDED: 8,
+})
 
 
 let NativeChromeCastMiniController = requireNativeComponent('RCTChromeCastMiniController', ChromeCastMiniController);

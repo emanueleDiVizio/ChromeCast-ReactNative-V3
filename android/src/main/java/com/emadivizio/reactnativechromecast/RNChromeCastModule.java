@@ -1,7 +1,6 @@
 
 package com.emadivizio.reactnativechromecast;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Handler;
 
@@ -24,10 +23,9 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   private CastPlayer.Controls controls;
 
 
-  public RNChromeCastModule(ReactApplicationContext reactContext, Application application) {
+  public RNChromeCastModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.manager = new CastManager(reactContext, new ReactCastSessionStateListener(reactContext), new ReactCastScanListener(reactContext));
-    manager.bindToActivityLifecycle(application);
     this.reactContext = reactContext;
   }
 
@@ -59,6 +57,21 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
     Handler mainHandler = new Handler(reactContext.getMainLooper());
     mainHandler.post(runnable);
   }
+
+  @ReactMethod
+  public void setUpScanner(){
+    manager.setUp();
+  }
+  @ReactMethod
+  public void startScan(){
+    manager.startScan();
+  }
+  @ReactMethod
+  public void stopScan(){
+    manager.stopScan();
+  }
+
+
 
   @ReactMethod
   public void showChromeCastActivity(){

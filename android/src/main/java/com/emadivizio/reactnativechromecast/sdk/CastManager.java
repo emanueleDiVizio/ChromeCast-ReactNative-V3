@@ -1,9 +1,7 @@
 package com.emadivizio.reactnativechromecast.sdk;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.MediaRouteButton;
 import android.view.KeyEvent;
@@ -31,61 +29,18 @@ public class CastManager {
     }
 
 
-    private void onCreate(){
+    public void setUp(){
       castDeviceScanner.setUp();
-      onResume();
     }
 
-    private void onResume(){
+    public void startScan(){
         castDeviceScanner.startScanning(castScanListener,
              sessionStateListener);
     }
 
 
-    private void onPause(){
+    public void stopScan(){
         castDeviceScanner.stopScanning();
-    }
-
-
-
-
-    public void bindToActivityLifecycle(Application application){
-        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle bundle) {
-              onCreate();
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-//              onResume();
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-                onResume();
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-                onPause();
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
     }
 
 

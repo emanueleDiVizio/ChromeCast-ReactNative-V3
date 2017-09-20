@@ -1,8 +1,6 @@
 
 package com.emadivizio.reactnativechromecast;
 
-import android.app.Application;
-
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -14,15 +12,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class RNChromeCastPackage implements ReactPackage {
-  public RNChromeCastPackage(Application activity) {
-    this.activity = activity;
-  }
-
-  private Application activity;
 
   @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RNChromeCastModule(reactContext, activity));
+      return Arrays.<NativeModule>asList(new RNChromeCastModule(reactContext));
     }
 
     // Deprecated from RN 0.47
