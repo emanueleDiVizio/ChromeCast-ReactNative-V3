@@ -60,17 +60,32 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setUpScanner(){
-    manager.setUp();
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        manager.setUp();
+      }
+    });
   }
   @ReactMethod
   public void startScan(){
-    manager.startScan();
-  }
-  @ReactMethod
-  public void stopScan(){
-    manager.stopScan();
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        manager.startScan();
+      }
+    });
   }
 
+  @ReactMethod
+  public void stopScan(){
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        manager.stopScan();
+      }
+    });
+  }
 
 
   @ReactMethod
@@ -89,7 +104,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
           controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive, mimeType);
           successCallback.invoke();
         } catch (Exception e) {
-          errorCallback.invoke(e.getMessage());
+          errorCallback.invoke(e);
         }
       }
     });

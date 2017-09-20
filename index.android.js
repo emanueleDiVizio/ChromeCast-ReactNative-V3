@@ -139,7 +139,6 @@ export class ChromeCastButton extends Component {
     constructor(props) {
         super(props);
         this.scanner = new ChromeCastScanner();
-        this.scanner.setUp()
     }
 
     render() {
@@ -147,6 +146,7 @@ export class ChromeCastButton extends Component {
     }
 
     componentWillMount() {
+        this.scanner.setUp()
         let {onScanEventReceived, onSessionEventReceived} = this.props;
         this.scanner.startScan(onScanEventReceived, onSessionEventReceived);
     }

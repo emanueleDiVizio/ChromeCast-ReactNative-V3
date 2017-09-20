@@ -2,6 +2,7 @@ package com.emadivizio.reactnativechromecast.sdk.player;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.emadivizio.reactnativechromecast.sdk.Video;
 import com.google.android.gms.cast.MediaInfo;
@@ -82,6 +83,7 @@ public class CastPlayer {
 
         @Override
         public void onFailure(@NonNull Status status) {
+          Log.d("ERROR", status.toString());
           controlsCallback.onFailure(status.getStatusMessage());
         }
       });
