@@ -1,6 +1,8 @@
 
-package com.emadivizio.reactnativechromecast;
+package com.emadivizio.reactnativechromecast.react;
 
+import com.emadivizio.reactnativechromecast.react.ui.ChromeCastButtonManager;
+import com.emadivizio.reactnativechromecast.react.ui.ChromeCastMiniControllerManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -25,6 +27,6 @@ public class RNChromeCastPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Arrays.<ViewManager>asList(new ChromeCastButtonManager(), new ChromeCastMiniControllerPackage());
+      return Arrays.<ViewManager>asList(new ChromeCastButtonManager(), new ChromeCastMiniControllerManager());
     }
 }

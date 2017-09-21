@@ -1,4 +1,4 @@
-package com.emadivizio.reactnativechromecast.sdk;
+package com.emadivizio.reactnativechromecast.sdk.ui;
 
 import android.view.Menu;
 

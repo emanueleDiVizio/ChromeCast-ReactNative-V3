@@ -1,7 +1,7 @@
-package com.emadivizio.reactnativechromecast;
+package com.emadivizio.reactnativechromecast.react.ui;
 
-import com.emadivizio.reactnativechromecast.sdk.ChromeCastButton;
-import com.emadivizio.reactnativechromecast.sdk.ChromeCastMiniController;
+import com.emadivizio.reactnativechromecast.sdk.ui.ChromeCastButton;
+import com.emadivizio.reactnativechromecast.sdk.ui.ChromeCastMiniController;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -10,7 +10,7 @@ import com.facebook.react.uimanager.annotations.ReactProp;
  * Created by Emanuele on 11/09/2017.
  */
 
-public class ChromeCastMiniControllerPackage extends SimpleViewManager<ChromeCastMiniController> {
+public class ChromeCastMiniControllerManager extends SimpleViewManager<ChromeCastMiniController> {
 
     public static final String REACT_CLASS = "RCTChromeCastMiniController";
 

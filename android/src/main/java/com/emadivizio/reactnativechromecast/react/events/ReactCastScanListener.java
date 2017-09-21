@@ -1,6 +1,7 @@
-package com.emadivizio.reactnativechromecast;
+package com.emadivizio.reactnativechromecast.react.events;
 
-import com.emadivizio.reactnativechromecast.sdk.CastDeviceScanner;
+import com.emadivizio.reactnativechromecast.sdk.cast.CastDeviceScanner;
+import com.emadivizio.reactnativechromecast.util.Constants;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -9,7 +10,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 /**
  * Created by Emanuele on 12/09/2017.
  */
-class ReactCastScanListener implements CastDeviceScanner.CastScanListener {
+public class ReactCastScanListener implements CastDeviceScanner.CastScanListener {
 
   private ReactContext mReactContext;
 

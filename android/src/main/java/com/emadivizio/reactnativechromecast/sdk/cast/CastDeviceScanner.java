@@ -1,14 +1,10 @@
-package com.emadivizio.reactnativechromecast.sdk;
+package com.emadivizio.reactnativechromecast.sdk.cast;
 
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.app.MediaRouteButton;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
@@ -25,11 +21,8 @@ import static com.google.android.gms.cast.framework.CastContext.getSharedInstanc
 public class CastDeviceScanner {
 
     private CastSession mCastSession;
-
-
     private CastStateListener mCastStateListener;
     private SessionManagerListener<CastSession> mSessionManagerListener;
-
     private CastContext mCastContext;
 
     private Context context;
@@ -40,124 +33,44 @@ public class CastDeviceScanner {
 
 
     /**
-     * Set up cast context and register lifecycle callbacks.
-     *
-     */
-    private void setUpCastContext() {
-        getCastContext();
-    }
-
-    /**
      * Set up cast manager to manage cast devices.
-     *
      */
     public void setUp() {
         setUpCastContext();
     }
 
-
-
-    private CastContext getCastContext(){
-        if(mCastContext == null){
-            mCastContext = CastContext.getSharedInstance(context);
-        }
-        return mCastContext;
-    }
-
-    /**
-     * Set up cast button to show cast dialog.
-     *
-     * @param context          Android application context.
-     * @param mediaRouteButton Button to wrap.
-     */
-    private static void setUpCastButton(Context context, MediaRouteButton mediaRouteButton) {
-        CastButtonFactory.setUpMediaRouteButton(context, mediaRouteButton);
-    }
-
-    /**
-     * Set up cast button to show cast dialog.
-     *
-     * @param context  Android application context.
-     * @param menu     Menu.
-     * @param buttonId Ref id.
-     */
-    private static MenuItem setUpCastButton(Context context, Menu menu, int buttonId) {
-        return CastButtonFactory.setUpMediaRouteButton(context, menu, buttonId);
-    }
-
-
     /**
      * Get the current cast session.
-     *
      */
     public CastSession getCurrentCastSession() {
         if (mCastSession == null) {
             mCastSession = getSharedInstance(context).getSessionManager()
-                  .getCurrentCastSession();
+                .getCurrentCastSession();
         }
         return mCastSession;
     }
 
     /**
-     * Add listeners to cast context.
+     * Set up cast context and register lifecycle callbacks.
      */
-    private void addListeners(CastScanListener listener, SessionStateListener sessionStateListener) {
-        mSessionManagerListener = setUpSessionManagerListener(sessionStateListener);
-        mCastStateListener = setUpCastStateListener(listener);
-        getCastContext().addCastStateListener(mCastStateListener);
-        getCastContext().getSessionManager().addSessionManagerListener(
-              mSessionManagerListener, CastSession.class);
+    private void setUpCastContext() {
+        getCastContext();
     }
 
 
     /**
-     * Remove listeners from cast context.
+     * Resume Cast Manager.
      */
-    private void removeListeners() {
-        getCastContext().removeCastStateListener(mCastStateListener);
-        getCastContext().getSessionManager().removeSessionManagerListener(
-              mSessionManagerListener, CastSession.class);
+    public void startScanning(CastScanListener castScanListener, SessionStateListener sessionStateListener) {
+        addListeners(castScanListener, sessionStateListener);
+        getCurrentCastSession();
     }
-
-
-    /**
-     * Register button to open google cast dialog.
-     *
-     * @param context          Android context.
-     * @param mediaRouteButton Button to register.
-     */
-    public static void registerButton(Context context, MediaRouteButton mediaRouteButton) {
-        setUpCastButton(context, mediaRouteButton);
-    }
-
-
-    /**
-     * Register menu item to open google cast dialog.
-     *
-     * @param context          Android activity.
-     * @param menu             Android menu.
-     * @param mediaRouteButton mediaRouteButton id.
-     * @return MenuItem.
-     */
-    public static MenuItem registerMenu( Context context, Menu menu, int mediaRouteButton) {
-        return setUpCastButton(context, menu, mediaRouteButton);
-    }
-
 
     /**
      * Pause cast manager.
      */
     public void stopScanning() {
         removeListeners();
-    }
-
-    /**
-     * Resume Cast Manager.
-     *
-     */
-    public void startScanning(CastScanListener castScanListener, SessionStateListener sessionStateListener) {
-        addListeners(castScanListener, sessionStateListener);
-        getCurrentCastSession();
     }
 
 
@@ -169,6 +82,39 @@ public class CastDeviceScanner {
      */
     public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
         return getCastContext().onDispatchVolumeKeyEventBeforeJellyBean(event);
+    }
+
+
+
+
+
+
+    private CastContext getCastContext() {
+        if (mCastContext == null) {
+            mCastContext = CastContext.getSharedInstance(context);
+        }
+        return mCastContext;
+    }
+
+    /**
+     * Add listeners to cast context.
+     */
+    private void addListeners(CastScanListener listener, SessionStateListener sessionStateListener) {
+        mSessionManagerListener = setUpSessionManagerListener(sessionStateListener);
+        mCastStateListener = setUpCastStateListener(listener);
+        getCastContext().addCastStateListener(mCastStateListener);
+        getCastContext().getSessionManager().addSessionManagerListener(
+            mSessionManagerListener, CastSession.class);
+    }
+
+
+    /**
+     * Remove listeners from cast context.
+     */
+    private void removeListeners() {
+        getCastContext().removeCastStateListener(mCastStateListener);
+        getCastContext().getSessionManager().removeSessionManagerListener(
+            mSessionManagerListener, CastSession.class);
     }
 
 

@@ -1,4 +1,4 @@
-package com.emadivizio.reactnativechromecast.sdk;
+package com.emadivizio.reactnativechromecast.sdk.cast.util;
 
 /**
  * Created by Emanuele on 12/09/2017.

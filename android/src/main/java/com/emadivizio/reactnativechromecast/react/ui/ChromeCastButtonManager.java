@@ -1,6 +1,6 @@
-package com.emadivizio.reactnativechromecast;
+package com.emadivizio.reactnativechromecast.react.ui;
 
-import com.emadivizio.reactnativechromecast.sdk.ChromeCastButton;
+import com.emadivizio.reactnativechromecast.sdk.ui.ChromeCastButton;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;

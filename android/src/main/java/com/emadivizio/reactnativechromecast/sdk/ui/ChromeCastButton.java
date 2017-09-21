@@ -1,4 +1,4 @@
-package com.emadivizio.reactnativechromecast.sdk;
+package com.emadivizio.reactnativechromecast.sdk.ui;
 
 import android.content.Context;
 import android.support.v7.app.MediaRouteButton;
@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emadivizio.reactnativechromecast.R;
+import com.emadivizio.reactnativechromecast.sdk.cast.CastManager;
 
 
 public class ChromeCastButton extends LinearLayout {

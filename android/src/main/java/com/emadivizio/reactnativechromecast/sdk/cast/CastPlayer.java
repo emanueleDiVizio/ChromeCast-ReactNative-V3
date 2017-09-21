@@ -1,10 +1,10 @@
-package com.emadivizio.reactnativechromecast.sdk.player;
+package com.emadivizio.reactnativechromecast.sdk.cast;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.emadivizio.reactnativechromecast.sdk.Video;
+import com.emadivizio.reactnativechromecast.sdk.cast.util.Video;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastSession;

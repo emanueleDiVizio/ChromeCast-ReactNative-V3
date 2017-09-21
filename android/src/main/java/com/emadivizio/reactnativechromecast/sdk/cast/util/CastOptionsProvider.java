@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.emadivizio.reactnativechromecast.sdk;
+package com.emadivizio.reactnativechromecast.sdk.cast.util;
 
 import android.content.Context;
 

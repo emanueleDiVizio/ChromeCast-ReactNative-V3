@@ -1,12 +1,15 @@
 
-package com.emadivizio.reactnativechromecast;
+package com.emadivizio.reactnativechromecast.react;
 
 import android.content.Intent;
 import android.os.Handler;
 
-import com.emadivizio.reactnativechromecast.sdk.CastManager;
-import com.emadivizio.reactnativechromecast.sdk.ExpandedControlsActivity;
-import com.emadivizio.reactnativechromecast.sdk.player.CastPlayer;
+import com.emadivizio.reactnativechromecast.react.events.ReactCastScanListener;
+import com.emadivizio.reactnativechromecast.react.events.ReactCastSessionStateListener;
+import com.emadivizio.reactnativechromecast.sdk.cast.CastManager;
+import com.emadivizio.reactnativechromecast.sdk.ui.ExpandedControlsActivity;
+import com.emadivizio.reactnativechromecast.sdk.cast.CastPlayer;
+import com.emadivizio.reactnativechromecast.util.Constants;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
