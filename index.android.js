@@ -27,71 +27,42 @@ function ChromeCastPlayer(available) {
 
     let runIfAvailable = function (func) {
         if (isAvailable) {
-            func()
+             return func().then(() => Promise.resolve(this))
         } else {
-            console.log('Player not available.')
+          return Promise.reject(new Error('Player not available.'))
         }
     };
 
     let setUnavailable = function () {
         isAvailable = false;
-    };
-
-    let successCallback = function (cb) {
-        cb({isSuccess: true, error: ''})
-    };
-
-    let errorCallback = function (cb, msg) {
-        cb({isSuccess: false, error: msg})
+        return Promise.resolve(this)
     };
 
 
-    this.play = (cb) => {
-        runIfAvailable(() => NativeChromeCast.play((msg) => errorCallback(), () => successCallback(cb)))
+    this.play = () => {
+        return runIfAvailable(() => NativeChromeCast.play())
     };
 
-    this.pause = (cb) => {
-        runIfAvailable(() => NativeChromeCast.pause((msg) => errorCallback(cb, msg), () => successCallback(cb)))
+    this.pause = () => {
+        return runIfAvailable(() => NativeChromeCast.pause())
     };
 
-    this.stop = (cb) => {
-        runIfAvailable(() => NativeChromeCast.stop((msg) => errorCallback(cb, msg), () => {
-            setUnavailable()
-            successCallback(cb)
-        }))
+    this.stop = () => {
+        return runIfAvailable(() => NativeChromeCast.stop().then(() => setUnavailable()))
     }
 
 
 }
 
 function ChromeCastWrapper() {
-    this.loadVideo = (video, cb) => {
-        NativeChromeCast.loadVideo(video.url, video.title, video.subtitle,
-            video.image, video.duration, video.isLive, video.mimeType,
-            (msg) => errorCallback(cb, msg),
-            () => {
-                if (video.autoplay) {
-                    NativeChromeCast.start(
-                        (msg) => errorCallback(cb, msg),
-                        () => successCallback(cb))
-                }
-                else {
-                    successCallback(cb)
-                }
-            })
+    this.loadVideo = (video) => {
+        return NativeChromeCast.loadVideo(video.url, video.title, video.subtitle,
+            video.image, video.duration, video.isLive, video.mimeType)
+		  .then(() => NativeChromeCast.start(video.progress).then(() => new ChromeCastPlayer(true)))
     };
 
     this.showChromeCastActivity = (cb) => {
         NativeChromeCast.showChromeCastActivity()
-    }
-
-
-    let successCallback = function (cb) {
-        cb({isSuccess: true, error: '', player: new ChromeCastPlayer(true)})
-    };
-
-    let errorCallback = function (cb, msg) {
-        cb({isSuccess: false, error: msg, player: new ChromeCastPlayer(false)})
     }
 }
 
@@ -100,13 +71,13 @@ export let ChromeCast = new ChromeCastWrapper()
 
 function ChromeCastScanner() {
     let listenForSessionEvents = (cb) => {
-        DeviceEventEmitter.addListener("ChromeCastSessionEvent", (e) => {
+        return DeviceEventEmitter.addListener("ChromeCastSessionEvent", (e) => {
             cb({status: e.SESSION_STATUS, message: e.SESSION_STATUS_MESSAGE})
         })
     }
 
     let listenForScanEvent = (cb) => {
-        DeviceEventEmitter.addListener("ChromeCastScanEvent", (e) => {
+        return DeviceEventEmitter.addListener("ChromeCastScanEvent", (e) => {
             cb({
                 deviceConnected: e.DEVICE_CONNECTED,
                 deviceConnecting: e.DEVICE_CONNECTING,
@@ -126,10 +97,10 @@ function ChromeCastScanner() {
     }
 
     this.stopScan = () => {
-        NativeChromeCast.stopScan();
-        this.scanListener.remove();
-        this.sessionListener.remove()
-    }
+	  this.scanListener.remove();
+	  this.sessionListener.remove()
+	  NativeChromeCast.stopScan();
+	}
 }
 
 let NativeChromeCastButton = requireNativeComponent('RCTChromeCastButton', ChromeCastButton);

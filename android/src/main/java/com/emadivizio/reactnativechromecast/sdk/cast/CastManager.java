@@ -68,7 +68,7 @@ public class CastManager {
         CastButtonFactory.setUpMediaRouteButton(context, mediaRouteButton);
     }
 
-    public CastPlayer.Controls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive, String mimeType) {
+    public CastControls loadVideo(String url, String title, String subtitle, String imageUri, int duration, boolean isLive, String mimeType) {
         return new CastPlayer(castDeviceScanner.getCurrentCastSession()).loadVideo(new Video(url, title, subtitle, imageUri, duration, isLive ? Video.StreamType.LIVE : Video.StreamType.BUFFER, mimeType));
     }
 

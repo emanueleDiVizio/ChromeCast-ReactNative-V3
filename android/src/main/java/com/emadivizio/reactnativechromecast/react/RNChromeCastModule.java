@@ -6,11 +6,11 @@ import android.os.Handler;
 
 import com.emadivizio.reactnativechromecast.react.events.ReactCastScanListener;
 import com.emadivizio.reactnativechromecast.react.events.ReactCastSessionStateListener;
+import com.emadivizio.reactnativechromecast.sdk.cast.CastControls;
 import com.emadivizio.reactnativechromecast.sdk.cast.CastManager;
 import com.emadivizio.reactnativechromecast.sdk.ui.ExpandedControlsActivity;
-import com.emadivizio.reactnativechromecast.sdk.cast.CastPlayer;
 import com.emadivizio.reactnativechromecast.util.Constants;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -23,7 +23,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
   private CastManager manager;
   private ReactApplicationContext reactContext;
-  private CastPlayer.Controls controls;
+  private CastControls castControls;
 
 
   public RNChromeCastModule(ReactApplicationContext reactContext) {
@@ -99,15 +99,15 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Callback errorCallback, final Callback successCallback) {
+  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
         try {
-          controls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive, mimeType);
-          successCallback.invoke();
+          castControls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive, mimeType);
+          promise.resolve(null);
         } catch (Exception e) {
-          errorCallback.invoke(e);
+          promise.reject(e);
         }
       }
     });
@@ -115,108 +115,77 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void start(final Callback errorCallback, final Callback successCallback) {
+  public void start(final long position, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        controls.load(true, 0, new CastPlayer.ControlsCallback() {
-          @Override
-          public void onSuccess() {
-            successCallback.invoke();
-          }
-
-          @Override
-          public void onFailure(String message) {
-            errorCallback.invoke(message);
-          }
-        });
+        castControls.load(true, position, new ControlsCallback(promise));
       }
     });
   }
 
 
   @ReactMethod
-  public void play(final Callback errorCallback, final Callback successCallback) {
+  public void play(final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        controls.play(new CastPlayer.ControlsCallback() {
-          @Override
-          public void onSuccess() {
-
-            successCallback.invoke();
-          }
-
-          @Override
-          public void onFailure(String message) {
-            errorCallback.invoke(message);
-          }
-        });
+        castControls.play(new ControlsCallback(promise));
       }
     });
   }
 
 
   @ReactMethod
-  public void pause(final Callback errorCallback, final Callback successCallback) {
+  public void pause(final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        controls.pause(new CastPlayer.ControlsCallback() {
-          @Override
-          public void onSuccess() {
-            successCallback.invoke();
-          }
-
-          @Override
-          public void onFailure(String message) {
-            errorCallback.invoke(message);
-          }
-        });
+        castControls.pause(new ControlsCallback(promise));
       }
     });
   }
 
 
   @ReactMethod
-  public void stop(final Callback errorCallback, final Callback successCallback) {
+  public void stop(final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        controls.stop(new CastPlayer.ControlsCallback() {
-          @Override
-          public void onSuccess() {
-            successCallback.invoke();
-          }
-
-          @Override
-          public void onFailure(String message) {
-            errorCallback.invoke(message);
-          }
-        });
+        castControls.stop(new ControlsCallback(promise));
       }
     });
   }
 
   @ReactMethod
-  public void seek(final double position, final Callback errorCallback, final Callback successCallback) {
+  public void seek(final double position, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        controls.seek((long) position, new CastPlayer.ControlsCallback() {
-          @Override
-          public void onSuccess() {
-            successCallback.invoke();
-          }
-
-          @Override
-          public void onFailure(String message) {
-            errorCallback.invoke(message);
-          }
-        });
+        castControls.seek((long) position, new ControlsCallback(promise));
       }
     });
   }
+
+
+  private class ControlsCallback implements CastControls.ControlsCallback {
+    private Promise promise;
+
+    public ControlsCallback(Promise promise) {
+      this.promise = promise;
+    }
+
+    @Override
+    public void onSuccess() {
+      promise.resolve(null);
+    }
+
+    @Override
+    public void onFailure(CastControls.ResultError error) {
+      promise.reject(String.valueOf(error.getCode()), error.getMessage());
+    }
+  }
+
 
 
 
