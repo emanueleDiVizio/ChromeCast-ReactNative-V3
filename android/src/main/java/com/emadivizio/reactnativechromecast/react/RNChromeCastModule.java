@@ -99,12 +99,12 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final int duration, final boolean isLive, final String mimeType, final Promise promise) {
+  public void loadVideo(final String url, final String title, final String subtitle, final String imageUri, final Number duration, final Boolean isLive, final String mimeType, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
         try {
-          castControls = manager.loadVideo(url, title, subtitle, imageUri, duration, isLive, mimeType);
+          castControls = manager.loadVideo(url, title, subtitle, imageUri, (Integer) duration, isLive, mimeType);
           promise.resolve(null);
         } catch (Exception e) {
           promise.reject(e);
@@ -115,11 +115,11 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void start(final long position, final Promise promise) {
+  public void start(final Number position, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        castControls.load(true, position, new ControlsCallback(promise));
+        castControls.load(true, (Long) position, new ControlsCallback(promise));
       }
     });
   }
@@ -158,7 +158,7 @@ public class RNChromeCastModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void seek(final double position, final Promise promise) {
+  public void seek(final Number position, final Promise promise) {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
