@@ -62,7 +62,7 @@ function ChromeCastWrapper() {
       video.subtitle,
       video.image,
       video.duration,
-      video.isLive,
+      false,
       video.mimeType
     ).then(() => new ChromeCastPlayer(true));
   };
