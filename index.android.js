@@ -19,10 +19,10 @@ import {
 
 let NativeChromeCast = NativeModules.RNChromeCast;
 
-function ChromeCastPlayer(available) {
-  let isAvailable = available;
+function ChromeCastWrapper() {
+  let isAvailable = false;
 
-  let runIfAvailable = function(func) {
+  const runIfAvailable = function(func) {
     if (isAvailable) {
       return func().then(() => Promise.resolve(this));
     } else {
@@ -30,9 +30,38 @@ function ChromeCastPlayer(available) {
     }
   };
 
-  let setUnavailable = function() {
+  const setUnavailable = function() {
     isAvailable = false;
     return Promise.resolve(this);
+  };
+
+  const setAvailable = function() {
+    isAvailable = true;
+    return Promise.resolve(this);
+  };
+
+  this.loadVideo = video => {
+    return NativeChromeCast.loadVideo(
+      video.url,
+      video.title,
+      video.subtitle,
+      video.image,
+      video.duration,
+      false,
+      video.mimeType
+    ).then(() => setAvailable());
+  };
+
+  this.loadLiveVideo = video => {
+    return NativeChromeCast.loadVideo(
+      video.url,
+      video.title,
+      video.subtitle,
+      video.image,
+      0,
+      true,
+      video.mimeType
+    ).then(() => setAvailable());
   };
 
   this.start = progress => {
@@ -51,32 +80,6 @@ function ChromeCastPlayer(available) {
     return runIfAvailable(() =>
       NativeChromeCast.stop().then(() => setUnavailable())
     );
-  };
-}
-
-function ChromeCastWrapper() {
-  this.loadVideo = video => {
-    return NativeChromeCast.loadVideo(
-      video.url,
-      video.title,
-      video.subtitle,
-      video.image,
-      video.duration,
-      false,
-      video.mimeType
-    ).then(() => new ChromeCastPlayer(true));
-  };
-
-  this.loadLiveVideo = video => {
-    return NativeChromeCast.loadVideo(
-      video.url,
-      video.title,
-      video.subtitle,
-      video.image,
-      0,
-      true,
-      video.mimeType
-    ).then(() => new ChromeCastPlayer(true));
   };
 
   this.showChromeCastActivity = cb => {
