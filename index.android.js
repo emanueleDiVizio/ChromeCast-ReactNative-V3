@@ -35,6 +35,10 @@ function ChromeCastPlayer(available) {
     return Promise.resolve(this);
   };
 
+  this.start = progress => {
+    return runIfAvailable(() => NativeChromeCast.start(progress));
+  };
+
   this.play = () => {
     return runIfAvailable(() => NativeChromeCast.play());
   };
@@ -60,11 +64,7 @@ function ChromeCastWrapper() {
       video.duration,
       video.isLive,
       video.mimeType
-    ).then(() =>
-      NativeChromeCast.start(video.progress).then(
-        () => new ChromeCastPlayer(true)
-      )
-    );
+    ).then(() => new ChromeCastPlayer(true));
   };
 
   this.loadLiveVideo = video => {
@@ -76,9 +76,7 @@ function ChromeCastWrapper() {
       0,
       true,
       video.mimeType
-    ).then(() =>
-      NativeChromeCast.start(0).then(() => new ChromeCastPlayer(true))
-    );
+    ).then(() => new ChromeCastPlayer(true));
   };
 
   this.showChromeCastActivity = cb => {
@@ -159,7 +157,7 @@ ChromeCastButton.defaultProps = {
   onSessionEventReceived: () => {}
 };
 
-export let SessionStatus = Object.freeze({
+export const SessionStatus = Object.freeze({
   STARTING: 0,
   STARTED: 1,
   START_FAILED: 2,
